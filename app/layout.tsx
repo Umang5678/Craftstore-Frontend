@@ -41,7 +41,6 @@
 // }
 
 // app/layout.tsx
-// "use client";
 import type { Metadata } from "next";
 import "./globals.css";
 import { Poppins } from "next/font/google";
@@ -54,10 +53,12 @@ const poppins = Poppins({
   variable: "--font-poppins",
 });
 
+// Page metadata
 export const metadata: Metadata = {
   title: "Crafting Studio",
   description: "Handmade crafting products",
 };
+
 export default function RootLayout({
   children,
 }: {
