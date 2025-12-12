@@ -38,7 +38,7 @@ const nextConfig = {
     // ⚠️ Local fallback only. DO NOT hardcode internal IPs here for production.
     NEXT_PUBLIC_API_URL:
       process.env.NEXT_PUBLIC_API_URL ||
-      " https://craftstore-backend.onrender.com/api",
+      " https://craftstore-backend.onrender.com",
   },
 };
 
