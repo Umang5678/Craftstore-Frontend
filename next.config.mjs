@@ -36,7 +36,9 @@ const nextConfig = {
   reactStrictMode: true,
   env: {
     // ⚠️ Local fallback only. DO NOT hardcode internal IPs here for production.
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
+    NEXT_PUBLIC_API_URL:
+      process.env.NEXT_PUBLIC_API_URL ||
+      " https://craftstore-backend.onrender.com/api",
   },
 };
 
