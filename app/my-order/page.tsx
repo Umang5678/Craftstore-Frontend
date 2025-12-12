@@ -357,7 +357,7 @@ export default function MyOrdersPage() {
       return;
     }
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/user/${email}`)
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/user/${email}`)
       .then((res) => res.json())
       .then((data) => setOrders(data))
       .catch((err) => console.error("Error fetching orders:", err));
