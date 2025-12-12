@@ -556,7 +556,7 @@ export default function ProductDetailPage() {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await API.get(`/products/${id}`);
+        const res = await API.get(`/api/products/${id}`);
         setProduct(res.data);
       } catch (err) {
         console.error("Error fetching product:", err);
@@ -570,7 +570,7 @@ export default function ProductDetailPage() {
     if (!product?.category) return;
     const fetchSimilar = async () => {
       try {
-        const res = await API.get("/products");
+        const res = await API.get("/api/products");
         const all = res.data;
         const filtered = all.filter(
           (p: Product) =>
