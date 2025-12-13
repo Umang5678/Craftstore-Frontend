@@ -55,7 +55,7 @@ const poppins = Poppins({
 
 // Page metadata
 export const metadata: Metadata = {
-  title: "Crafting Studio",
+  title: "Craft Store",
   description: "Handmade crafting products",
 };
 
