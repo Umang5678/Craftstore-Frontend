@@ -407,9 +407,7 @@ export default function CartPage() {
     <div className="bg-[#FFF8F2] min-h-screen text-[#5B4636]">
       <Navbar />
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-6 text-center sm:text-left">
-          Your Cart
-        </h1>
+        <h1 className="text-3xl font-bold mb-6 text-left">Cart</h1>
 
         <div className="grid md:grid-cols-3 gap-8">
           {/* 🛍️ Cart Items Section */}
