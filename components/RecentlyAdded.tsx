@@ -1,56 +1,138 @@
+// "use client";
+
+// import { useEffect, useState } from "react";
+// import ProductCard from "./ProductCard";
+// import API from "../utils/api";
+
+// export default function RecentlyAdded() {
+//   const [recentProducts, setRecentProducts] = useState<any[]>([]);
+
+//   useEffect(() => {
+//     const fetchProducts = async () => {
+//       try {
+//         const res = await API.get("/api/products");
+//         const allProducts = res.data.reverse();
+//         setRecentProducts(allProducts.slice(0, 10)); // latest 10
+//       } catch (err) {
+//         console.error("Error fetching recent products:", err);
+//       }
+//     };
+//     fetchProducts();
+//   }, []);
+
+//   if (recentProducts.length === 0)
+//     return (
+//       <p className="text-center text-gray-500 py-10 text-lg">
+//         Loading recently added products...
+//       </p>
+//     );
+
+//   return (
+//     <section className="bg-[#FFF8F2] py-10">
+//       <div className="max-w-7xl mx-auto px-4">
+//         <h2 className="text-3xl font-bold text-center mb-8 text-[#5B4636]">
+//           Recently Added
+//         </h2>
+
+//         {/* ✅ Scrollable Row (Swipeable) */}
+//         <div
+//           className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-hide"
+//           style={{ scrollBehavior: "smooth" }}
+//         >
+//           {recentProducts.map((product, idx) => (
+//             <div
+//               key={idx}
+//               className="min-w-[240px] sm:min-w-[260px] snap-start flex-shrink-0"
+//             >
+//               <ProductCard product={product} />
+//             </div>
+//           ))}
+//         </div>
+//       </div>
+
+//       {/* Optional small CSS to hide scrollbar */}
+//       <style jsx global>{`
+//         .scrollbar-hide::-webkit-scrollbar {
+//           display: none;
+//         }
+//         .scrollbar-hide {
+//           -ms-overflow-style: none;
+//           scrollbar-width: none;
+//         }
+//       `}</style>
+//     </section>
+//   );
+// }
+
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
+import API from "../utils/api";
 
-interface RecentlyAddedProps {
-  products: any[];
-}
+export default function RecentlyAdded() {
+  const [recentProducts, setRecentProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-export default function RecentlyAdded({ products }: RecentlyAddedProps) {
-  const recentProducts = products.slice(0, 10); // latest 10 products
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await API.get("/api/products");
+        const allProducts = res.data.reverse();
+        setRecentProducts(allProducts.slice(0, 10)); // latest 10
+      } catch (err) {
+        console.error("Error fetching recent products:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   return (
-    <section className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-10">
-      <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 text-[#5B4636]">
-        Recently Added Items
-      </h2>
+    <section className="bg-[#FFF8F2] py-10">
+      <div className="max-w-7xl mx-auto px-4">
+        <h2 className="text-3xl font-bold text-center mb-8 text-[#5B4636]">
+          Recently Added
+        </h2>
 
-      {recentProducts.length > 0 ? (
-        <motion.div
-          className="
-            flex 
-            gap-4 sm:gap-5 md:gap-6 
-            overflow-x-auto 
-            scrollbar-hide 
-            pb-3 sm:pb-4 
-            snap-x snap-mandatory
-          "
-          whileTap={{ cursor: "grabbing" }}
-        >
-          {recentProducts.map((p: any) => (
-            <motion.div
-              key={p._id}
-              className="
-                flex-shrink-0 
-                w-[48%]           /* 🟢 Shows 2 cards on mobile */
-                sm:w-[32%]        /* 🟡 3 on tablets */
-                md:w-[24%]        /* 🔵 4 on desktops */
-                lg:w-[22%]
-                snap-center
-              "
-              whileHover={{ scale: 1.03 }}
-              transition={{ type: "spring", stiffness: 200 }}
-            >
-              <ProductCard product={p} />
-            </motion.div>
-          ))}
-        </motion.div>
-      ) : (
-        <p className="text-center text-gray-500 text-lg">
-          No recent products found 😔
-        </p>
-      )}
+        {/* ✅ Simple Spinner Loader */}
+        {loading ? (
+          <div className="flex justify-center items-center py-16">
+            <div className="w-10 h-10 border-4 border-[#C17E2D] border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        ) : (
+          <>
+            {recentProducts.length > 0 ? (
+              <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide snap-x snap-mandatory">
+                {recentProducts.map((product, idx) => (
+                  <div
+                    key={idx}
+                    className="min-w-[48%] sm:min-w-[220px] md:min-w-[250px] flex-shrink-0 snap-start"
+                  >
+                    <ProductCard product={product} />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-center text-gray-500 text-lg mt-10">
+                No recently added products 😔
+              </p>
+            )}
+          </>
+        )}
+      </div>
+
+      {/* Hide scrollbar globally */}
+      <style jsx global>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        .scrollbar-hide {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </section>
   );
 }
