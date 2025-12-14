@@ -90,9 +90,9 @@ export default function RecentlyAdded() {
   }, []);
 
   return (
-    <section className="bg-[#FFF8F2] py-10">
+    <section className="bg-[#FFF8F2] py-4">
       <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-8 text-[#5B4636]">
+        <h2 className="text-3xl font-bold text-center mb-4 text-[#5B4636]">
           Recently Added
         </h2>
 

@@ -56,7 +56,7 @@ import { Instagram, Phone, Mail, MapPin } from "lucide-react";
 
 export default function Footer() {
   return (
-    <footer className="bg-gradient-to-b from-[#C17E2D] to-[#A86B22] text-white py-12 mt-10">
+    <footer className="bg-gradient-to-b from-[#C17E2D] to-[#A86B22] text-white py-12 mt-4">
       <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-10">
         {/* 🏠 Company Info */}
         <div>

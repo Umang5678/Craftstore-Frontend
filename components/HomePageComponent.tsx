@@ -111,6 +111,7 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import Hero from "./Hero";
 import RecentlyAdded from "./RecentlyAdded";
+import ServiceInfo from "./ServiceInfo";
 
 export default function HomePageComponent() {
   const [mounted, setMounted] = useState(false);
@@ -181,6 +182,7 @@ export default function HomePageComponent() {
   return (
     <div className="bg-[#FFF8F2] min-h-screen flex flex-col font-sans">
       <Navbar />
+
       <Hero />
       <RecentlyAdded />
       <section className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
@@ -227,7 +229,7 @@ export default function HomePageComponent() {
           </p>
         )}
       </section>
-
+      <ServiceInfo />
       <Footer />
     </div>
   );
