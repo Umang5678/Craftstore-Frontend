@@ -112,6 +112,7 @@ import Footer from "./Footer";
 import Hero from "./Hero";
 import RecentlyAdded from "./RecentlyAdded";
 import ServiceInfo from "./ServiceInfo";
+import CategoryCards from "./CategoryCards";
 
 export default function HomePageComponent() {
   const [mounted, setMounted] = useState(false);
@@ -184,7 +185,10 @@ export default function HomePageComponent() {
       <Navbar />
 
       <Hero />
-      <RecentlyAdded />
+
+      <RecentlyAdded products={products} loading={loading} />
+
+      <CategoryCards />
       <section className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <h2 className="text-3xl font-bold text-center mb-8 text-[#5B4636]">
           {selectedCategory === "All"

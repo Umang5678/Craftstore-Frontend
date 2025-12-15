@@ -155,9 +155,81 @@
 //     </section>
 //   );
 // }
+// "use client";
+
+// import { useState, useEffect } from "react";
+// import { motion, AnimatePresence } from "framer-motion";
+// import Image from "next/image";
+
+// interface Slide {
+//   id: number;
+//   image: string;
+// }
+
+// const slides: Slide[] = [
+//   { id: 1, image: "/images/bankk.jpg" },
+//   { id: 2, image: "/images/boxx.png" },
+//   { id: 3, image: "/images/watch.jpg" },
+// ];
+
+// export default function HeroSection() {
+//   const [current, setCurrent] = useState(0);
+//   const [isDragging, setIsDragging] = useState(false);
+
+//   useEffect(() => {
+//     if (isDragging) return;
+//     const interval = setInterval(() => {
+//       setCurrent((prev) => (prev + 1) % slides.length);
+//     }, 5000);
+//     return () => clearInterval(interval);
+//   }, [isDragging]);
+
+//   const handleSwipe = (offsetX: number) => {
+//     if (offsetX > 100)
+//       setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
+//     else if (offsetX < -100) setCurrent((prev) => (prev + 1) % slides.length);
+//   };
+
+//   return (
+//     <section className="w-full relative overflow-hidden">
+//       <div className="w-full max-h-[90vh] sm:max-h-[80vh] md:max-h-[85vh] lg:max-h-[90vh] flex items-center justify-center relative">
+//         <AnimatePresence initial={false} mode="wait">
+//           <motion.div
+//             key={slides[current].id}
+//             className="w-full relative"
+//             initial={{ opacity: 0, x: 150 }}
+//             animate={{ opacity: 1, x: 0 }}
+//             exit={{ opacity: 0, x: -150 }}
+//             transition={{ type: "tween", duration: 0.6 }}
+//             drag="x"
+//             dragConstraints={{ left: 0, right: 0 }}
+//             onDragStart={() => setIsDragging(true)}
+//             onDragEnd={(e, info) => {
+//               setIsDragging(false);
+//               handleSwipe(info.offset.x);
+//             }}
+//           >
+//             {/* 🖼️ Image - responsive and centered */}
+//             <Image
+//               src={slides[current].image}
+//               alt={`Slide ${slides[current].id}`}
+//               width={1600} // base width of your image
+//               height={900} // base height
+//               className="w-full h-auto object-contain"
+//               priority
+//             />
+
+//             {/* Overlay */}
+//             <div className="absolute inset-0 bg-black/20" />
+//           </motion.div>
+//         </AnimatePresence>
+//       </div>
+//     </section>
+//   );
+// }
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
@@ -175,32 +247,46 @@ const slides: Slide[] = [
 export default function HeroSection() {
   const [current, setCurrent] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
+  const [direction, setDirection] = useState(0);
 
+  // ✅ Auto-slide (optional, can remove)
   useEffect(() => {
     if (isDragging) return;
     const interval = setInterval(() => {
+      setDirection(1);
       setCurrent((prev) => (prev + 1) % slides.length);
-    }, 5000);
+    }, 10000);
     return () => clearInterval(interval);
   }, [isDragging]);
 
-  const handleSwipe = (offsetX: number) => {
-    if (offsetX > 100)
-      setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
-    else if (offsetX < -100) setCurrent((prev) => (prev + 1) % slides.length);
-  };
+  // ✅ Swipe logic (fixed direction)
+  const handleSwipe = useCallback(
+    (offsetX: number) => {
+      if (offsetX > 100) {
+        // swipe right → show previous image (move slide right)
+        setDirection(-1);
+        setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
+      } else if (offsetX < -100) {
+        // swipe left → show next image (move slide left)
+        setDirection(1);
+        setCurrent((prev) => (prev + 1) % slides.length);
+      }
+    },
+    [slides.length]
+  );
 
   return (
-    <section className="w-full relative overflow-hidden">
-      <div className="w-full max-h-[90vh] sm:max-h-[80vh] md:max-h-[85vh] lg:max-h-[90vh] flex items-center justify-center relative">
-        <AnimatePresence initial={false} mode="wait">
+    <section className="relative w-full h-[80vh] sm:h-[85vh] md:h-[90vh] bg-[#fdfaf7] overflow-hidden">
+      <div className="relative w-full h-full flex items-center justify-center">
+        <AnimatePresence initial={false} mode="wait" custom={direction}>
           <motion.div
             key={slides[current].id}
-            className="w-full relative"
-            initial={{ opacity: 0, x: 150 }}
+            className="absolute w-full h-full"
+            custom={direction}
+            initial={{ opacity: 0, x: direction > 0 ? 200 : -200 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -150 }}
-            transition={{ type: "tween", duration: 0.6 }}
+            exit={{ opacity: 0, x: direction > 0 ? -200 : 200 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             onDragStart={() => setIsDragging(true)}
@@ -209,20 +295,37 @@ export default function HeroSection() {
               handleSwipe(info.offset.x);
             }}
           >
-            {/* 🖼️ Image - responsive and centered */}
+            {/* 🖼️ Image only */}
             <Image
               src={slides[current].image}
               alt={`Slide ${slides[current].id}`}
-              width={1600} // base width of your image
-              height={900} // base height
-              className="w-full h-auto object-contain"
+              fill
               priority
+              className="object-cover w-full h-full select-none"
             />
 
-            {/* Overlay */}
+            {/* ✨ Overlay (for aesthetic depth) */}
             <div className="absolute inset-0 bg-black/20" />
           </motion.div>
         </AnimatePresence>
+      </div>
+
+      {/* ⚪ Navigation Dots */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-3">
+        {slides.map((_, index) => (
+          <button
+            key={index}
+            onClick={() => {
+              setDirection(index > current ? 1 : -1);
+              setCurrent(index);
+            }}
+            className={`w-3 h-3 rounded-full transition-all ${
+              current === index
+                ? "bg-[#C17E2D] scale-110 shadow-md"
+                : "bg-white/60 hover:bg-white/80"
+            }`}
+          ></button>
+        ))}
       </div>
     </section>
   );

@@ -567,7 +567,7 @@ export default function Navbar() {
   const handleCategorySelect = (cat: string) => {
     setMenuOpen(false);
     setShowCategories(false);
-    router.push(`/?category=${encodeURIComponent(cat)}`);
+    router.push(`/category/${encodeURIComponent(cat)}`);
   };
 
   const handlePriceFilter = (val: number) => {

@@ -879,7 +879,10 @@ export default function ProductDetailPage() {
                     Select Size:
                   </label>
                   <div className="flex flex-wrap gap-2">
-                    {product.size.map((size, idx) => (
+                    {(product.size.length === 1 && product.size[0].includes(",")
+                      ? product.size[0].split(",").map((s) => s.trim()) // Split comma-separated string
+                      : product.size
+                    ).map((size, idx) => (
                       <button
                         key={idx}
                         onClick={() => setSelectedSize(size)}
