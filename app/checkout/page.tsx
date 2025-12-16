@@ -441,6 +441,7 @@ import Navbar from "@/components/Navbar";
 import Image from "next/image";
 import toast from "react-hot-toast";
 import API from "@/utils/api";
+import { useRouter } from "next/navigation";
 
 interface CartItem {
   _id: string;
@@ -461,6 +462,7 @@ export default function CheckoutPage() {
   const [state, setState] = useState("");
   const [pincode, setPincode] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const storedCart = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -565,6 +567,13 @@ export default function CheckoutPage() {
 
           localStorage.removeItem("cart");
           setCart([]);
+
+          toast.loading("Redirecting to your orders...", { duration: 1500 });
+
+          // ✅ Redirect to My Orders page after 1s
+          setTimeout(() => {
+            router.push("/my-order");
+          }, 1500);
         },
         prefill: {
           name,
