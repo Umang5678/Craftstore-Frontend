@@ -239,9 +239,9 @@ interface Slide {
 }
 
 const slides: Slide[] = [
-  { id: 1, image: "/images/bankk.jpg" },
-  { id: 2, image: "/images/boxx.png" },
-  { id: 3, image: "/images/watch.jpg" },
+  { id: 1, image: "/images/bank2.jpg" },
+  { id: 2, image: "/images/box2.png" },
+  { id: 3, image: "/images/watch2.jpg" },
 ];
 
 export default function HeroSection() {
