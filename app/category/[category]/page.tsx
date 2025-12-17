@@ -46,8 +46,6 @@ export default function CategoryPage() {
 
   return (
     <div className="bg-[#FFF8F2] min-h-screen flex flex-col font-sans">
-      <Navbar />
-
       {/* ✅ Header */}
       <div className="max-w-7xl mx-auto px-6 py-10 text-center">
         <h1 className="text-3xl sm:text-4xl font-bold text-[#5B4636] mb-4">

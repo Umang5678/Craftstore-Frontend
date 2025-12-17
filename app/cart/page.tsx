@@ -394,7 +394,6 @@ export default function CartPage() {
   if (cart.length === 0)
     return (
       <>
-        <Navbar />
         <div className="flex flex-col justify-center items-center h-[70vh] text-center bg-[#FFF8F2]">
           <Image
             src="/images/logo3.png"
