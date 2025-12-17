@@ -469,7 +469,18 @@ export default function CheckoutPage() {
     setCart(storedCart);
   }, []);
 
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  // const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  // const shippingCharge = total < 499 ? 49 : 0;
+  // const grandTotal = total + shippingCharge;
+
+  const subtotal = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
+  const shippingCharge = subtotal < 499 ? 49 : 0;
+  const discount = subtotal >= 1200 ? subtotal * 0.1 : 0;
+  const grandTotal = subtotal + shippingCharge - discount;
 
   // ✅ Auto-fill city & state based on PIN code
   useEffect(() => {
@@ -485,9 +496,9 @@ export default function CheckoutPage() {
             const postOffice = data[0].PostOffice[0];
             setCity(postOffice.District);
             setState(postOffice.State);
-            toast.success(
-              `📍 Auto-filled: ${postOffice.District}, ${postOffice.State}`
-            );
+            // toast.success(
+            //   `📍 Auto-filled: ${postOffice.District}, ${postOffice.State}`
+            // );
           } else {
             toast.error("Invalid Pincode. Please enter a valid 6-digit code.");
             setCity("");
@@ -520,11 +531,28 @@ export default function CheckoutPage() {
       return;
     }
 
+    // const orderData = {
+    //   customer: { name, email, phone, address, city, state, pincode },
+    //   items: cart,
+    //   total,
+    // };
+    // const orderData = {
+    //   customer: { name, email, phone, address, city, state, pincode },
+    //   items: cart,
+    //   subtotal: total,
+    //   shippingCharge,
+    //   total: grandTotal,
+    // };
+
     const orderData = {
       customer: { name, email, phone, address, city, state, pincode },
       items: cart,
-      total,
+      subtotal,
+      shippingCharge,
+      discount,
+      total: grandTotal,
     };
+
     localStorage.setItem("userEmail", email);
     // try {
     //   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders`, {
@@ -543,7 +571,8 @@ export default function CheckoutPage() {
       setLoading(true);
       // Step 1: Create Razorpay order via backend
       const { data: order } = await API.post("api/payment/create-order", {
-        amount: total,
+        // amount: total,
+        amount: grandTotal,
       });
 
       // Step 2: Open Razorpay popup
@@ -596,14 +625,14 @@ export default function CheckoutPage() {
   if (cart.length === 0)
     return (
       <>
-        <Navbar />
+        {/* <Navbar /> */}
         <p className="text-center mt-20 text-xl">Your cart is empty 🛒</p>
       </>
     );
 
   return (
     <div>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="max-w-6xl mx-auto px-4 py-10">
         <h1 className="text-3xl font-bold mb-8">Checkout</h1>
 
@@ -637,7 +666,41 @@ export default function CheckoutPage() {
                 </div>
               ))}
             </div>
-            <p className="mt-4 text-xl font-bold text-right">Total: ₹{total}</p>
+            {/* <p className="mt-4 text-xl font-bold text-right">Total: ₹{total}</p>
+            <div className="mt-4 space-y-2 text-right">
+              <p className="text-gray-700">Subtotal: ₹{total}</p>
+              <p className="text-gray-700">
+                Shipping:{" "}
+                {shippingCharge === 0 ? (
+                  <span className="text-green-600 font-semibold">Free</span>
+                ) : (
+                  <span>₹{shippingCharge}</span>
+                )}
+              </p>
+              <p className="text-xl font-bold">Total: ₹{grandTotal}</p>
+            </div> */}
+            <div className="mt-4 space-y-2 text-right">
+              <p className="text-gray-700">Subtotal: ₹{subtotal}</p>
+
+              <p className="text-gray-700">
+                Shipping:{" "}
+                {shippingCharge === 0 ? (
+                  <span className="text-green-600 font-semibold">Free</span>
+                ) : (
+                  <span>₹{shippingCharge}</span>
+                )}
+              </p>
+
+              {discount > 0 && (
+                <p className="text-green-700 font-semibold">
+                  🎉 Discount (10% off): -₹{discount.toFixed(0)}
+                </p>
+              )}
+
+              <p className="text-xl font-bold">
+                Total: ₹{grandTotal.toFixed(0)}
+              </p>
+            </div>
           </div>
 
           {/* 📝 Customer Details */}

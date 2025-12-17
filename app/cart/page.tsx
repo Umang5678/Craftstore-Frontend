@@ -379,7 +379,17 @@ export default function CartPage() {
     window.dispatchEvent(new Event("updatedCart"));
   };
 
-  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  // const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  // const shippingCharge = total < 499 ? 49 : 0;
+  // const grandTotal = total + shippingCharge;
+
+  const subtotal = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+  const shippingCharge = subtotal < 499 ? 49 : 0;
+  const discount = subtotal >= 1200 ? subtotal * 0.1 : 0;
+  const grandTotal = subtotal + shippingCharge - discount;
 
   if (cart.length === 0)
     return (
@@ -405,7 +415,7 @@ export default function CartPage() {
 
   return (
     <div className="bg-[#FFF8F2] min-h-screen text-[#5B4636]">
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="max-w-6xl mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-6 text-left">Cart</h1>
 
@@ -487,8 +497,7 @@ export default function CartPage() {
             ))}
           </div>
 
-          {/* 💰 Order Summary */}
-          <div className="bg-[#FDF5E6] border border-[#D3BFA8] rounded-xl shadow-md p-6 sticky top-20 h-fit">
+          {/* <div className="bg-[#FDF5E6] border border-[#D3BFA8] rounded-xl shadow-md p-6 sticky top-20 h-fit">
             <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
 
             <div className="space-y-2">
@@ -496,13 +505,57 @@ export default function CartPage() {
                 <p>Subtotal</p>
                 <p>₹{total}</p>
               </div>
+
               <div className="flex justify-between">
                 <p>Shipping</p>
-                <p className="text-green-600">Free</p>
+                {shippingCharge === 0 ? (
+                  <p className="text-green-600">Free</p>
+                ) : (
+                  <p>₹{shippingCharge}</p>
+                )}
               </div>
+
               <div className="border-t border-[#D3BFA8] pt-2 mt-2 flex justify-between font-semibold">
                 <p>Total</p>
-                <p>₹{total}</p>
+                <p>₹{grandTotal}</p>
+              </div>
+            </div>
+
+            <button
+              onClick={() => router.push("/checkout")}
+              className="w-full mt-6 py-3 bg-[#A67843] text-white rounded-lg font-semibold hover:bg-[#8C5E30] transition"
+            >
+              Proceed to Checkout
+            </button>
+          </div> */}
+          <div className="bg-[#FDF5E6] border border-[#D3BFA8] rounded-xl shadow-md p-6 sticky top-20 h-fit">
+            <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <p>Subtotal</p>
+                <p>₹{subtotal}</p>
+              </div>
+
+              <div className="flex justify-between">
+                <p>Shipping</p>
+                {shippingCharge === 0 ? (
+                  <p className="text-green-600">Free</p>
+                ) : (
+                  <p>₹{shippingCharge}</p>
+                )}
+              </div>
+
+              {discount > 0 && (
+                <div className="flex justify-between text-green-700 font-semibold">
+                  <p>🎉 Discount (10% off)</p>
+                  <p>-₹{discount.toFixed(0)}</p>
+                </div>
+              )}
+
+              <div className="border-t border-[#D3BFA8] pt-2 mt-2 flex justify-between font-semibold">
+                <p>Total</p>
+                <p>₹{grandTotal.toFixed(0)}</p>
               </div>
             </div>
 

@@ -113,6 +113,8 @@ import Hero from "./Hero";
 import RecentlyAdded from "./RecentlyAdded";
 import ServiceInfo from "./ServiceInfo";
 import CategoryCards from "./CategoryCards";
+import AnnouncementBar from "./AnnouncementBar";
+import PromoBanner from "./PromoBanner";
 
 export default function HomePageComponent() {
   const [mounted, setMounted] = useState(false);
@@ -182,13 +184,12 @@ export default function HomePageComponent() {
 
   return (
     <div className="bg-[#FFF8F2] min-h-screen flex flex-col font-sans">
-      <Navbar />
-
       <Hero />
 
       <RecentlyAdded products={products} loading={loading} />
 
       <CategoryCards />
+      <PromoBanner />
       <section className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <h2 className="text-3xl font-bold text-center mb-8 text-[#5B4636]">
           {selectedCategory === "All"

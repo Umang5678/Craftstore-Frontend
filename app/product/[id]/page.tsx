@@ -840,7 +840,7 @@ export default function ProductDetailPage() {
 
   return (
     <div className="bg-[#FFF8F2] text-[#5B4636] min-h-screen">
-      <Navbar />
+      {/* <Navbar /> */}
 
       {/* ✅ Loader */}
       {loading && (

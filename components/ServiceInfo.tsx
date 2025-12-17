@@ -7,7 +7,7 @@ export default function ServiceInfo() {
     {
       icon: <Truck className="w-10 h-10 text-[#C17E2D]" />,
       title: "Free Shipping",
-      desc: "Enjoy free shipping PAN India on orders above ₹999/-.",
+      desc: "Enjoy free shipping PAN India on orders above ₹499/-.",
     },
     {
       icon: <Headphones className="w-10 h-10 text-[#C17E2D]" />,

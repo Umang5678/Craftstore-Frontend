@@ -45,6 +45,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Poppins } from "next/font/google";
 import { Toaster } from "react-hot-toast";
+import AnnouncementBar from "@/components/AnnouncementBar";
+import Navbar from "@/components/Navbar";
 
 // Poppins font
 const poppins = Poppins({
@@ -67,6 +69,8 @@ export default function RootLayout({
   return (
     <html lang="en" className={poppins.variable}>
       <body className="font-sans bg-[#FFF8F2] text-[#5B4636]">
+        <AnnouncementBar />
+        <Navbar />
         {children}
         <Toaster position="top-right" reverseOrder={false} />
       </body>
