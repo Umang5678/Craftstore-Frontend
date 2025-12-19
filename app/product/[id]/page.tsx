@@ -915,7 +915,7 @@ export default function ProductDetailPage() {
 
           {/* Similar Products */}
           {similarProducts.length > 0 && (
-            <section className="max-w-7xl mx-auto px-4 py-12">
+            <section className="max-w-7xl mx-auto px-4 py-6">
               <h2 className="text-2xl sm:text-3xl font-semibold mb-6">
                 Similar Products
               </h2>

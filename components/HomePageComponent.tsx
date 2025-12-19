@@ -115,6 +115,7 @@ import ServiceInfo from "./ServiceInfo";
 import CategoryCards from "./CategoryCards";
 import AnnouncementBar from "./AnnouncementBar";
 import PromoBanner from "./PromoBanner";
+import { usePathname } from "next/navigation";
 
 export default function HomePageComponent() {
   const [mounted, setMounted] = useState(false);
@@ -128,6 +129,21 @@ export default function HomePageComponent() {
   const maxPrice = searchParams.get("maxPrice")
     ? Number(searchParams.get("maxPrice"))
     : null;
+  const pathname = usePathname();
+
+  useEffect(() => {
+    // ✅ Restore scroll position after navigation
+    const savedPosition = sessionStorage.getItem("scrollPosition");
+    if (savedPosition && pathname === "/") {
+      setTimeout(() => {
+        window.scrollTo({
+          top: parseInt(savedPosition),
+          behavior: "smooth",
+        });
+        sessionStorage.removeItem("scrollPosition");
+      }, 200); // small delay so page fully loads first
+    }
+  }, [pathname]);
 
   // Hydration guard
   useEffect(() => setMounted(true), []);
@@ -167,20 +183,70 @@ export default function HomePageComponent() {
   }, [selectedCategory, maxPrice, products]);
 
   if (!mounted) return null;
+  // ✅ Skip first 10 products (already shown in RecentlyAdded)
+  const startingIndex = 10;
+  const remainingProducts = filteredProducts.slice(startingIndex);
 
   const visibleProducts = showAll
-    ? filteredProducts
-    : filteredProducts.slice(0, 8);
+    ? remainingProducts
+    : remainingProducts.slice(0, 8);
 
-  // ✅ Loader Component
-  // if (loading) {
-  //   return (
-  //     <div className="flex flex-col items-center justify-center min-h-screen bg-[#FFF8F2] text-[#5B4636]">
-  //       <div className="w-16 h-16 border-4 border-[#C17E2D] border-t-transparent rounded-full animate-spin"></div>
-  //       <p className="mt-4 text-lg font-medium">Loading products...</p>
-  //     </div>
-  //   );
-  // }
+  // return (
+  //   <div className="bg-[#FFF8F2] min-h-screen flex flex-col font-sans">
+  //     <Hero />
+
+  //     <RecentlyAdded products={products} loading={loading} />
+
+  //     <CategoryCards />
+  //     <PromoBanner />
+  //     <section className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+  //       <h2 className="text-3xl font-bold text-center mb-8 text-[#5B4636]">
+  //         {selectedCategory === "All"
+  //           ? "Our Crafting Products"
+  //           : `${selectedCategory} Collection`}
+  //       </h2>
+
+  //       {/* ✅ Logo Loader while fetching products */}
+  //       {loading ? (
+  //         <div className="flex flex-col items-center justify-center py-20">
+  //           <img
+  //             src="/images/cslogo.jpg" // 👈 change this to your actual logo path
+  //             alt="Crafting Studio"
+  //             className="w-20 h-20 object-contain animate-pulse"
+  //           />
+  //           <p className="mt-4 text-[#5B4636] text-lg font-semibold animate-pulse">
+  //             CraftStore is loading...
+  //           </p>
+  //         </div>
+  //       ) : filteredProducts.length > 0 ? (
+  //         <>
+  //           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
+  //             {visibleProducts.map((p: any) => (
+  //               <ProductCard key={p._id} product={p} />
+  //             ))}
+  //           </div>
+
+  //           {filteredProducts.length > 8 && !showAll && (
+  //             <div className="flex justify-center mt-10">
+  //               <button
+  //                 onClick={() => setShowAll(true)}
+  //                 className="px-6 py-3 bg-[#C17E2D] text-white font-medium rounded-lg hover:bg-[#A86B22] transition shadow-md"
+  //               >
+  //                 View All Products
+  //               </button>
+  //             </div>
+  //           )}
+  //         </>
+  //       ) : (
+  //         <p className="text-center text-gray-500 text-lg mt-10">
+  //           No products found 😔
+  //         </p>
+  //       )}
+  //     </section>
+  //     <ServiceInfo />
+  //     <Footer />
+  //   </div>
+  // );
 
   return (
     <div className="bg-[#FFF8F2] min-h-screen flex flex-col font-sans">
@@ -190,6 +256,7 @@ export default function HomePageComponent() {
 
       <CategoryCards />
       <PromoBanner />
+
       <section className="flex-grow max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <h2 className="text-3xl font-bold text-center mb-8 text-[#5B4636]">
           {selectedCategory === "All"
@@ -201,7 +268,7 @@ export default function HomePageComponent() {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20">
             <img
-              src="/images/cslogo.jpg" // 👈 change this to your actual logo path
+              src="/images/cslogo.jpg"
               alt="Crafting Studio"
               className="w-20 h-20 object-contain animate-pulse"
             />
@@ -209,7 +276,7 @@ export default function HomePageComponent() {
               CraftStore is loading...
             </p>
           </div>
-        ) : filteredProducts.length > 0 ? (
+        ) : remainingProducts.length > 0 ? (
           <>
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
               {visibleProducts.map((p: any) => (
@@ -217,7 +284,7 @@ export default function HomePageComponent() {
               ))}
             </div>
 
-            {filteredProducts.length > 8 && !showAll && (
+            {remainingProducts.length > 8 && !showAll && (
               <div className="flex justify-center mt-10">
                 <button
                   onClick={() => setShowAll(true)}
@@ -234,6 +301,7 @@ export default function HomePageComponent() {
           </p>
         )}
       </section>
+
       <ServiceInfo />
       <Footer />
     </div>

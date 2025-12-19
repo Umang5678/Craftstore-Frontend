@@ -59,6 +59,9 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "Craft Store",
   description: "Handmade crafting products",
+  icons: {
+    icon: "/favicon.ico", // 👈 this line adds your favicon
+  },
 };
 
 export default function RootLayout({
