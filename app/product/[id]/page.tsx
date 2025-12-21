@@ -838,6 +838,88 @@ export default function ProductDetailPage() {
     setToast(`${product?.name} (${sizeToAdd}) added to cart 🛒`);
   };
 
+  const formatDescription = (desc: string): string => {
+    const lines = desc.trim().split("\n").filter(Boolean);
+
+    let html = "";
+    let tableLines: string[] = [];
+    let inTable = false;
+    let bulletPoints: string[] = [];
+
+    lines.forEach((line) => {
+      if (line.includes("|")) {
+        inTable = true;
+        tableLines.push(line);
+      } else if (line.startsWith("•") || line.startsWith("-")) {
+        if (inTable && tableLines.length) {
+          html += renderTable(tableLines);
+          tableLines = [];
+          inTable = false;
+        }
+        bulletPoints.push(line.replace(/^[-•]\s*/, "").trim());
+      } else if (line.trim() === "---") {
+        // skip table separator
+        tableLines.push(line);
+      }
+    });
+
+    // Render bullets first (outside the box)
+    if (bulletPoints.length > 0) {
+      html += `
+      <ul class="list-disc pl-6 space-y-1 mb-4 mt-2">
+        ${bulletPoints.map((p) => `<li>${p}</li>`).join("")}
+      </ul>`;
+    }
+
+    // Render table (inside the box)
+    if (tableLines.length > 0) {
+      html += renderTable(tableLines);
+    }
+
+    // Add any leftover paragraphs
+    const extraText = lines.filter(
+      (line) =>
+        !line.startsWith("•") && !line.startsWith("-") && !line.includes("|")
+    );
+    if (extraText.length) {
+      html += `<p class="mt-3">${extraText.join("<br/>")}</p>`;
+    }
+
+    return html;
+  };
+
+  // 🪵 helper to render a pretty wooden-style table
+  const renderTable = (tableLines: string[]): string => {
+    const header = tableLines[0].split("|").map((h) => h.trim());
+    const body = tableLines
+      .slice(2)
+      .map((row) => row.split("|").map((cell) => cell.trim()));
+
+    return `
+    <div class="bg-[#fff4e8] border border-[#e2c7a2] rounded-lg p-4 shadow-sm overflow-x-auto mt-3">
+      <table class="w-full border-collapse border border-[#d9b98f] text-sm">
+        <thead class="bg-[#f7e9d7]">
+          <tr>${header
+            .map((h) => `<th class="border border-[#d9b98f] p-2">${h}</th>`)
+            .join("")}</tr>
+        </thead>
+        <tbody>
+          ${body
+            .map(
+              (row) =>
+                `<tr>${row
+                  .map(
+                    (cell) =>
+                      `<td class="border border-[#d9b98f] p-2">${cell}</td>`
+                  )
+                  .join("")}</tr>`
+            )
+            .join("")}
+        </tbody>
+      </table>
+    </div>`;
+  };
+
   return (
     <div className="bg-[#FFF8F2] text-[#5B4636] min-h-screen">
       {/* <Navbar /> */}
@@ -906,10 +988,20 @@ export default function ProductDetailPage() {
                 Add to Cart
               </button>
 
-              <h3 className="mt-8 text-lg font-medium mb-2">Description:</h3>
+              {/* <h3 className="mt-8 text-lg font-medium mb-2">Description:</h3>
               <p className="leading-relaxed text-justify">
                 {product.description || "No description available."}
-              </p>
+              </p> */}
+              <h3 className="mt-8 text-lg font-medium mb-3">Description:</h3>
+
+              <div
+                className="leading-relaxed text-[#5B4636] prose prose-sm sm:prose-base max-w-none"
+                dangerouslySetInnerHTML={{
+                  __html: formatDescription(
+                    product.description || "No description available."
+                  ),
+                }}
+              ></div>
             </div>
           </div>
 

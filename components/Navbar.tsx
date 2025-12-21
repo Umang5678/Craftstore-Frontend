@@ -512,6 +512,7 @@ const categories = [
   "Money Bank",
   "Car Stand",
   "Wall Art Piece",
+  "Card Holder",
   "Key Holder Stand",
   "Wooden Hamper Box",
   "Gifting Box",
@@ -590,11 +591,11 @@ export default function Navbar() {
           {/* 🌿 Logo */}
           <Link href="/" className="flex items-center">
             <Image
-              src="/images/logo3.png"
+              src="/images/logoo.png"
               alt="Crafting Studio Logo"
-              width={180}
-              height={60}
-              className="object-contain w-36 sm:w-40 md:w-48 h-14 transition-all"
+              width={130}
+              height={50}
+              className="object-contain w-30 sm:w-48 md:w-48 h-14 transition-all"
               priority
             />
           </Link>

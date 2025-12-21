@@ -148,9 +148,39 @@ export default function HomePageComponent() {
   // Hydration guard
   useEffect(() => setMounted(true), []);
 
-  // ✅ Fetch products with loading indicator
+  // // ✅ Fetch products with loading indicator
+  // useEffect(() => {
+  //   if (!mounted) return;
+
+  //   const fetchProducts = async () => {
+  //     try {
+  //       setLoading(true);
+  //       const res = await API.get("/api/products");
+  //       const allProducts = res.data.reverse();
+  //       setProducts(allProducts);
+  //       setFilteredProducts(allProducts);
+  //     } catch (err) {
+  //       console.error("Error fetching products:", err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchProducts();
+  // }, [mounted]);
+
+  // ✅ Fetch products only once & cache them in sessionStorage
   useEffect(() => {
     if (!mounted) return;
+
+    const cached = sessionStorage.getItem("products");
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      setProducts(parsed);
+      setFilteredProducts(parsed);
+      setLoading(false);
+      return; // ✅ Skip API call
+    }
 
     const fetchProducts = async () => {
       try {
@@ -159,6 +189,9 @@ export default function HomePageComponent() {
         const allProducts = res.data.reverse();
         setProducts(allProducts);
         setFilteredProducts(allProducts);
+
+        // ✅ Cache in sessionStorage for faster back navigation
+        sessionStorage.setItem("products", JSON.stringify(allProducts));
       } catch (err) {
         console.error("Error fetching products:", err);
       } finally {

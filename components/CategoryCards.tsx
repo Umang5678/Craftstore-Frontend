@@ -84,32 +84,32 @@ import { useRouter } from "next/navigation";
 const categories = [
   {
     name: "Wall Clock",
-    image: "/images/c.jpg",
+    image: "/images/w.png",
     gradient: "from-[#F7D6D0] to-[#EFC3B0]",
   },
   {
     name: "Money Bank",
-    image: "/images/moneyu.jpg",
+    image: "/images/mo.png",
     gradient: "from-[#E6E8FF] to-[#D1D6F5]",
   },
   {
     name: "Gifting Box",
-    image: "/images/bo.jpg",
+    image: "/images/boxes.png",
     gradient: "from-[#EBDCC2] to-[#E5C88B]",
   },
   {
     name: "Wall Art Piece",
-    image: "/images/watch.jpg",
+    image: "/images/arts.png",
     gradient: "from-[#F6E4D3] to-[#EBD0A5]",
   },
   {
     name: "Night Lamps",
-    image: "/images/boxx.png",
+    image: "/images/lamp.png",
     gradient: "from-[#EDE9F9] to-[#D8CCF0]",
   },
   {
     name: "Car Stand",
-    image: "/images/car.jpg",
+    image: "/images/carss.png",
     gradient: "from-[#F7DDE6] to-[#F2B7C5]",
   },
 ];
@@ -144,8 +144,8 @@ export default function CategoryCards() {
                   src={cat.image}
                   alt={cat.name}
                   width={300}
-                  height={300}
-                  className="object-cover w-full h-full rounded-xl"
+                  height={200}
+                  className="object-cover w-full h-50% rounded-xl"
                 />
               </div>
               <p className="mt-3 text-[#5B4636] font-semibold text-sm sm:text-base tracking-wide">
